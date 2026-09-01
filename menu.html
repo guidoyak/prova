@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Navigazione Nautica</title>
+    <title>Dashboard Navigazione Nautica & Meteo</title>
     <style>
         * {
             box-sizing: border-box;
@@ -20,7 +20,7 @@
             color: #ffffff;
         }
 
-        /* Menu Orizzontale a 5 Pulsanti (+ Home) */
+        /* Menu Orizzontale a 6 Pulsanti + Home */
         nav {
             background-color: #2c3e50;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
@@ -39,11 +39,11 @@
 
         .menu button {
             width: 100%;
-            padding: 14px 5px;
+            padding: 14px 2px;
             background: transparent;
             color: #ecf0f1;
             border: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -184,11 +184,12 @@
 </head>
 <body>
 
-    <!-- Menu Orizzontale a 5 Pulsanti + Home -->
+    <!-- Menu Orizzontale a 6 Pulsanti + Panoramica -->
     <nav>
         <ul class="menu">
             <li><button class="nav-btn active" onclick="showPage('home', this)">Panoramica</button></li>
             <li><button class="nav-btn" onclick="showPage('windy', this)">Windy</button></li>
+            <li><button class="nav-btn" onclick="showPage('radar-meteo', this)">Radar Meteo</button></li>
             <li><button class="nav-btn" onclick="showPage('marine-traffic', this)">Marine Traffic</button></li>
             <li><button class="nav-btn" onclick="showPage('navily', this)">Navily</button></li>
             <li><button class="nav-btn" onclick="showPage('iboating', this)">i-Boating</button></li>
@@ -202,7 +203,7 @@
         <!-- Pagina 0: Panoramica / Preview -->
         <div id="home" class="page active">
             <div class="home-content">
-                <h2 class="home-title">Dashboard di Navigazione Nautica</h2>
+                <h2 class="home-title">Dashboard di Navigazione Nautica & Meteo</h2>
                 <p style="margin-bottom: 25px; color: #ecf0f1;">Seleziona uno degli strumenti dal menu in alto oppure consulta la preview dei servizi disponibili qui sotto:</p>
                 
                 <div class="preview-grid">
@@ -215,6 +216,17 @@
                         <div class="card-actions">
                             <button class="card-btn btn-view" onclick="switchTab('windy')">Visualizza</button>
                             <a href="https://www.windy.com/" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
+
+                    <div class="preview-card">
+                        <div>
+                            <h3>Radar Meteo</h3>
+                            <p>Radar meteorologico e precipitazioni in tempo reale con tracciamento temporali e temporizzazioni.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('radar-meteo')">Visualizza</button>
+                            <a href="https://www.meteoeradar.it/radar-meteo" target="_blank" class="card-btn btn-open">Sito</a>
                         </div>
                     </div>
 
@@ -275,16 +287,25 @@
             <iframe src="https://www.windy.com/"></iframe>
         </div>
 
-        <!-- Pagina 2: Marine Traffic -->
+        <!-- Pagina 2: Radar Meteo -->
+        <div id="radar-meteo" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>Radar Meteo & Precipitazioni</strong></span>
+                <a href="https://www.meteoeradar.it/radar-meteo" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://www.meteoeradar.it/radar-meteo"></iframe>
+        </div>
+
+        <!-- Pagina 3: Marine Traffic -->
         <div id="marine-traffic" class="page">
             <div class="external-bar">
-                <span>Stai visualizzando: <strong>Marine Traffic</strong> (Se la mappa non carica a causa delle protezioni di sicurezza, usa il pulsante a destra)</span>
+                <span>Stai visualizzando: <strong>Marine Traffic</strong></span>
                 <a href="https://www.marinetraffic.com/en" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
             </div>
             <iframe src="https://www.marinetraffic.com/en"></iframe>
         </div>
 
-        <!-- Pagina 3: Navily -->
+        <!-- Pagina 4: Navily -->
         <div id="navily" class="page">
             <div class="external-bar">
                 <span>Stai visualizzando: <strong>Navily Carte</strong></span>
@@ -293,7 +314,7 @@
             <iframe src="https://www.navily.com/it/carte"></iframe>
         </div>
 
-        <!-- Pagina 4: i-Boating -->
+        <!-- Pagina 5: i-Boating -->
         <div id="iboating" class="page">
             <div class="external-bar">
                 <span>Stai visualizzando: <strong>i-Boating GPS Charts</strong></span>
@@ -302,7 +323,7 @@
             <iframe src="https://fishing-app.gpsnauticalcharts.com/i-boating-fishing-web-app/fishing-marine-charts-navigation.html#12.5/37.8115/-122.3890"></iframe>
         </div>
 
-        <!-- Pagina 5: OpenSea Map -->
+        <!-- Pagina 6: OpenSea Map -->
         <div id="opensea-map" class="page">
             <div class="external-bar">
                 <span>Stai visualizzando: <strong>OpenSea Map</strong></span>
@@ -315,22 +336,18 @@
 
     <script>
         function showPage(pageId, element) {
-            // Nasconde tutte le sezioni
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
 
-            // Disattiva tutti i pulsanti del menu
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
 
-            // Attiva la pagina e il pulsante selezionati
             document.getElementById(pageId).classList.add('active');
             if (element) {
                 element.classList.add('active');
             }
         }
 
-        // Funzione helper per passare ai tab dalle card di preview
         function switchTab(pageId) {
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => {
