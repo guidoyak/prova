@@ -1,11 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Top Menu</title>
+<title>Anteprima Sito</title>
 <style>
 
-  /* ====== COPY FROM HERE ====== */
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #F5F5F4;
+    color: #33363D;
+  }
+
+  /* ====== MENU (invariato) ====== */
 
   .topbar {
     display: flex;
@@ -14,7 +23,6 @@
     background-color: #20232A;
     padding: 0 24px;
     height: 60px;
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
 
   .topbar .menu {
@@ -54,51 +62,187 @@
     background-color: rgba(217, 164, 65, 0.12);
   }
 
-  /* Stack vertically on very small screens */
   @media (max-width: 480px) {
-    .topbar {
-      height: auto;
-      padding: 12px;
-    }
-    .topbar .menu {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    .topbar { height: auto; padding: 12px; }
+    .topbar .menu { flex-wrap: wrap; justify-content: center; }
   }
 
-  /* ====== COPY TO HERE ====== */
+  /* ====== CONTENUTO DELLE PAGINE ====== */
 
-  body {
-    margin: 0;
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #F5F5F4;
+  .pages {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
   }
-  .demo-content {
-    max-width: 640px;
-    margin: 60px auto;
-    padding: 0 20px;
-    color: #33363D;
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page h1 {
+    font-size: 28px;
+    margin: 0 0 12px;
   }
+
+  .page > p.intro {
+    color: #5B5F68;
+    line-height: 1.6;
+    margin: 0 0 32px;
+  }
+
+  /* Griglia prodotti */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: #FFFFFF;
+    border: 1px solid #E5E4E1;
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .card h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+  }
+
+  .card p {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #5B5F68;
+    line-height: 1.5;
+  }
+
+  .card .price {
+    font-weight: 600;
+    color: #20232A;
+  }
+
+  /* Lista blog */
+  .post {
+    padding: 18px 0;
+    border-bottom: 1px solid #E5E4E1;
+  }
+
+  .post:last-child { border-bottom: none; }
+
+  .post h3 { margin: 0 0 6px; font-size: 17px; }
+  .post .date { font-size: 13px; color: #8A8D94; margin-bottom: 8px; }
+  .post p { margin: 0; color: #5B5F68; line-height: 1.5; }
+
+  /* Contatti */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #FFFFFF;
+    border: 1px solid #E5E4E1;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 320px;
+  }
+
+  .contact-info span { font-size: 14px; }
+  .contact-info strong { display: block; font-size: 12px; color: #8A8D94; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 2px; }
+
 </style>
 </head>
 <body>
 
-  <!-- ====== COPY FROM HERE ====== -->
   <nav class="topbar">
     <ul class="menu">
-      <li><button class="active">Home</button></li>
-      <li><button>Products</button></li>
-      <li><button>About</button></li>
-      <li><button>Blog</button></li>
-      <li><button>Contact</button></li>
+      <li><button class="active" data-page="home">Home</button></li>
+      <li><button data-page="products">Products</button></li>
+      <li><button data-page="about">About</button></li>
+      <li><button data-page="blog">Blog</button></li>
+      <li><button data-page="contact">Contact</button></li>
     </ul>
   </nav>
-  <!-- ====== COPY TO HERE ====== -->
 
-  <div class="demo-content">
-    <h1>Page content</h1>
-    <p>This is just a placeholder to show the menu in context. Everything above the "COPY TO HERE" markers (the CSS block and the &lt;nav&gt; element) is all you need to drop into your own page.</p>
-  </div>
+  <main class="pages">
+
+    <section id="home" class="page active">
+      <h1>Benvenuto</h1>
+      <p class="intro">Questa è la homepage di anteprima. Sostituisci questo testo con la presentazione della tua attività o del tuo progetto: chi sei, cosa offri, e perché un visitatore dovrebbe restare.</p>
+    </section>
+
+    <section id="products" class="page">
+      <h1>Prodotti</h1>
+      <p class="intro">Una selezione dei prodotti in evidenza. Ogni scheda è pensata per essere sostituita con i tuoi contenuti reali.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Prodotto A</h3>
+          <p>Breve descrizione del prodotto e dei suoi punti di forza.</p>
+          <span class="price">€ 29,00</span>
+        </div>
+        <div class="card">
+          <h3>Prodotto B</h3>
+          <p>Breve descrizione del prodotto e dei suoi punti di forza.</p>
+          <span class="price">€ 49,00</span>
+        </div>
+        <div class="card">
+          <h3>Prodotto C</h3>
+          <p>Breve descrizione del prodotto e dei suoi punti di forza.</p>
+          <span class="price">€ 19,00</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="page">
+      <h1>Chi siamo</h1>
+      <p class="intro">Racconta qui la storia della tua attività: quando è nata, cosa la contraddistingue, e i valori su cui si basa il tuo lavoro quotidiano.</p>
+      <p class="intro">Puoi aggiungere una seconda sezione con il team, la missione, o i traguardi raggiunti finora.</p>
+    </section>
+
+    <section id="blog" class="page">
+      <h1>Blog</h1>
+      <p class="intro">Gli ultimi articoli pubblicati.</p>
+      <div class="post">
+        <h3>Titolo del primo articolo</h3>
+        <div class="date">12 agosto 2026</div>
+        <p>Breve estratto dell'articolo che invita il lettore a continuare la lettura.</p>
+      </div>
+      <div class="post">
+        <h3>Titolo del secondo articolo</h3>
+        <div class="date">3 luglio 2026</div>
+        <p>Breve estratto dell'articolo che invita il lettore a continuare la lettura.</p>
+      </div>
+      <div class="post">
+        <h3>Titolo del terzo articolo</h3>
+        <div class="date">21 giugno 2026</div>
+        <p>Breve estratto dell'articolo che invita il lettore a continuare la lettura.</p>
+      </div>
+    </section>
+
+    <section id="contact" class="page">
+      <h1>Contatti</h1>
+      <p class="intro">Per qualsiasi informazione, puoi raggiungerci ai recapiti indicati di seguito.</p>
+      <div class="contact-info">
+        <span><strong>Email</strong>info@tuosito.it</span>
+        <span><strong>Telefono</strong>+39 000 000 0000</span>
+        <span><strong>Indirizzo</strong>Via Esempio 1, Mestre (VE)</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll('.menu button');
+    const pages = document.querySelectorAll('.page');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        pages.forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.page).classList.add('active');
+      });
+    });
+  </script>
 
 </body>
 </html>
+
