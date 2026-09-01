@@ -1,12 +1,104 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titolo della pagina</title>
+<meta charset="UTF-8">
+<title>Top Menu</title>
+<style>
+
+  /* ====== COPY FROM HERE ====== */
+
+  .topbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #20232A;
+    padding: 0 24px;
+    height: 60px;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .topbar .menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .topbar .menu button {
+    background: transparent;
+    border: none;
+    color: #C9CCD3;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .topbar .menu button:hover {
+    background-color: rgba(217, 164, 65, 0.12);
+    color: #F2F2F2;
+  }
+
+  .topbar .menu button:focus-visible {
+    outline: 2px solid #D9A441;
+    outline-offset: 2px;
+  }
+
+  .topbar .menu button.active {
+    color: #D9A441;
+    background-color: rgba(217, 164, 65, 0.12);
+  }
+
+  /* Stack vertically on very small screens */
+  @media (max-width: 480px) {
+    .topbar {
+      height: auto;
+      padding: 12px;
+    }
+    .topbar .menu {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  /* ====== COPY TO HERE ====== */
+
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #F5F5F4;
+  }
+  .demo-content {
+    max-width: 640px;
+    margin: 60px auto;
+    padding: 0 20px;
+    color: #33363D;
+  }
+</style>
 </head>
 <body>
-    <h1>Benvenuto nel mio sito web</h1>
-    <p>Questo è un paragrafo di prova.</p>
+
+  <!-- ====== COPY FROM HERE ====== -->
+  <nav class="topbar">
+    <ul class="menu">
+      <li><button class="active">Home</button></li>
+      <li><button>Products</button></li>
+      <li><button>About</button></li>
+      <li><button>Blog</button></li>
+      <li><button>Contact</button></li>
+    </ul>
+  </nav>
+  <!-- ====== COPY TO HERE ====== -->
+
+  <div class="demo-content">
+    <h1>Page content</h1>
+    <p>This is just a placeholder to show the menu in context. Everything above the "COPY TO HERE" markers (the CSS block and the &lt;nav&gt; element) is all you need to drop into your own page.</p>
+  </div>
+
 </body>
 </html>
