@@ -1,248 +1,394 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>Anteprima Sito</title>
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Navigazione Nautica & Meteo Advanced</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
 
-  * { box-sizing: border-box; }
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #1a252f;
+            color: #ffffff;
+        }
 
-  body {
-    margin: 0;
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #F5F5F4;
-    color: #33363D;
-  }
+        /* Menu Orizzontale a 8 Pulsanti + Panoramica */
+        nav {
+            background-color: #2c3e50;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            z-index: 10;
+            overflow-x: auto; /* Permette lo scroll orizzontale su schermi piccoli */
+        }
 
-  /* ====== MENU (invariato) ====== */
+        .menu {
+            display: flex;
+            list-style: none;
+            width: 100%;
+            min-width: 900px; /* Garantisce una larghezza minima leggibile per tutti gli 8 tasti */
+        }
 
-  .topbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #20232A;
-    padding: 0 24px;
-    height: 60px;
-  }
+        .menu li {
+            flex: 1;
+        }
 
-  .topbar .menu {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+        .menu button {
+            width: 100%;
+            padding: 14px 2px;
+            background: transparent;
+            color: #ecf0f1;
+            border: none;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-  .topbar .menu button {
-    background: transparent;
-    border: none;
-    color: #C9CCD3;
-    font-size: 15px;
-    font-weight: 500;
-    padding: 10px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease;
-  }
+        .menu button:hover {
+            background-color: #34495e;
+            color: #3498db;
+        }
 
-  .topbar .menu button:hover {
-    background-color: rgba(217, 164, 65, 0.12);
-    color: #F2F2F2;
-  }
+        .menu button.active {
+            background-color: #3498db;
+            color: #ffffff;
+        }
 
-  .topbar .menu button:focus-visible {
-    outline: 2px solid #D9A441;
-    outline-offset: 2px;
-  }
+        /* Contenitore Principale */
+        .main-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
 
-  .topbar .menu button.active {
-    color: #D9A441;
-    background-color: rgba(217, 164, 65, 0.12);
-  }
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
 
-  @media (max-width: 480px) {
-    .topbar { height: auto; padding: 12px; }
-    .topbar .menu { flex-wrap: wrap; justify-content: center; }
-  }
+        .page.active {
+            display: flex;
+            flex-direction: column;
+        }
 
-  /* ====== CONTENUTO DELLE PAGINE ====== */
+        /* Barra Azioni per Link Esterno */
+        .external-bar {
+            background-color: #34495e;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
 
-  .pages {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 48px 20px 80px;
-  }
+        .external-btn {
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
 
-  .page { display: none; }
-  .page.active { display: block; }
+        .external-btn:hover {
+            background-color: #2ecc71;
+        }
 
-  .page h1 {
-    font-size: 28px;
-    margin: 0 0 12px;
-  }
+        /* Stile Iframe per Pagine Web */
+        iframe {
+            width: 100%;
+            flex: 1;
+            border: none;
+            background: #ffffff;
+        }
 
-  .page > p.intro {
-    color: #5B5F68;
-    line-height: 1.6;
-    margin: 0 0 32px;
-  }
+        /* Griglia Preview per la Home */
+        .home-content {
+            padding: 30px;
+            overflow-y: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-  /* Griglia prodotti */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-  }
+        .home-title {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #3498db;
+        }
 
-  .card {
-    background: #FFFFFF;
-    border: 1px solid #E5E4E1;
-    border-radius: 8px;
-    padding: 18px;
-  }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
 
-  .card h3 {
-    margin: 0 0 6px;
-    font-size: 16px;
-  }
+        .preview-card {
+            background: #2c3e50;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #34495e;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-  .card p {
-    margin: 0 0 10px;
-    font-size: 14px;
-    color: #5B5F68;
-    line-height: 1.5;
-  }
+        .preview-card h3 {
+            margin-bottom: 10px;
+            color: #3498db;
+        }
 
-  .card .price {
-    font-weight: 600;
-    color: #20232A;
-  }
+        .preview-card p {
+            font-size: 14px;
+            color: #bdc3c7;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
 
-  /* Lista blog */
-  .post {
-    padding: 18px 0;
-    border-bottom: 1px solid #E5E4E1;
-  }
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
 
-  .post:last-child { border-bottom: none; }
+        .card-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+        }
 
-  .post h3 { margin: 0 0 6px; font-size: 17px; }
-  .post .date { font-size: 13px; color: #8A8D94; margin-bottom: 8px; }
-  .post p { margin: 0; color: #5B5F68; line-height: 1.5; }
+        .btn-view {
+            background-color: #3498db;
+            color: white;
+        }
 
-  /* Contatti */
-  .contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: #FFFFFF;
-    border: 1px solid #E5E4E1;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 320px;
-  }
-
-  .contact-info span { font-size: 14px; }
-  .contact-info strong { display: block; font-size: 12px; color: #8A8D94; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 2px; }
-
-</style>
+        .btn-open {
+            background-color: #7f8c8d;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 
-  <nav class="topbar">
-    <ul class="menu">
-      <li><button class="active" data-page="home">Home</button></li>
-      <li><button data-page="products">Products</button></li>
-      <li><button data-page="about">About</button></li>
-      <li><button data-page="blog">Blog</button></li>
-      <li><button data-page="contact">Contact</button></li>
-    </ul>
-  </nav>
+    <nav>
+        <ul class="menu">
+            <li><button class="nav-btn active" onclick="showPage('home', this)">Panoramica</button></li>
+            <li><button class="nav-btn" onclick="showPage('windy', this)">Windy</button></li>
+            <li><button class="nav-btn" onclick="showPage('windfinder', this)">Windfinder</button></li>
+            <li><button class="nav-btn" onclick="showPage('earth-nullschool', this)">Earth Nullschool</button></li>
+            <li><button class="nav-btn" onclick="showPage('radar-meteo', this)">Radar Meteo</button></li>
+            <li><button class="nav-btn" onclick="showPage('marine-traffic', this)">Marine Traffic</button></li>
+            <li><button class="nav-btn" onclick="showPage('navily', this)">Navily</button></li>
+            <li><button class="nav-btn" onclick="showPage('iboating', this)">i-Boating</button></li>
+            <li><button class="nav-btn" onclick="showPage('opensea-map', this)">OpenSea Map</button></li>
+        </ul>
+    </nav>
 
-  <main class="pages">
+    <div class="main-container">
+        
+        <div id="home" class="page active">
+            <div class="home-content">
+                <h2 class="home-title">Dashboard di Navigazione Nautica & Meteo</h2>
+                <p style="margin-bottom: 25px; color: #ecf0f1;">Seleziona uno degli strumenti dal menu in alto oppure consulta la preview dei servizi disponibili qui sotto:</p>
+                
+                <div class="preview-grid">
+                    
+                    <div class="preview-card">
+                        <div>
+                            <h3>Windy</h3>
+                            <p>Previsioni meteo interattive, vento, onde e pressione atmosferica in tempo reale a livello globale.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('windy')">Visualizza</button>
+                            <a href="https://www.windy.com/" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
 
-    <section id="home" class="page active">
-      <h1>Benvenuto</h1>
-      <p class="intro">Questa è la homepage di anteprima. Sostituisci questo testo con la presentazione della tua attività o del tuo progetto: chi sei, cosa offri, e perché un visitatore dovrebbe restare.</p>
-    </section>
+                    <div class="preview-card">
+                        <div>
+                            <h3>Windfinder</h3>
+                            <p>Mappe dettagliate dei venti, Superforecast locali, onde e maree per marinai e kiter.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('windfinder')">Visualizza</button>
+                            <a href="https://www.windfinder.com/#10/45.9621/13.4514/spot" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
 
-    <section id="products" class="page">
-      <h1>Prodotti</h1>
-      <p class="intro">Una selezione dei prodotti in evidenza. Ogni scheda è pensata per essere sostituita con i tuoi contenuti reali.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>Prodotto A</h3>
-          <p>Breve descrizione del prodotto e dei suoi punti di forza.</p>
-          <span class="price">€ 29,00</span>
+                    <div class="preview-card">
+                        <div>
+                            <h3>Earth Nullschool</h3>
+                            <p>Mappa animata 3D globale in tempo reale delle correnti oceaniche, venti e condizioni atmosferiche.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('earth-nullschool')">Visualizza</button>
+                            <a href="https://earth.nullschool.net" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
+
+                    <div class="preview-card">
+                        <div>
+                            <h3>Radar Meteo</h3>
+                            <p>Radar meteorologico e precipitazioni in tempo reale con tracciamento temporali e temporizzazioni.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('radar-meteo')">Visualizza</button>
+                            <a href="https://www.meteoeradar.it/radar-meteo" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
+
+                    <div class="preview-card">
+                        <div>
+                            <h3>Marine Traffic</h3>
+                            <p>Tracciamento navale AIS in tempo reale, posizioni dei pescherecci, yacht e navi commerciali nel mondo.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('marine-traffic')">Visualizza</button>
+                            <a href="https://www.marinetraffic.com/en" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
+
+                    <div class="preview-card">
+                        <div>
+                            <h3>Navily</h3>
+                            <p>Guida agli ancoraggi e porti turistici con commenti della community, foto e protezione dai venti.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('navily')">Visualizza</button>
+                            <a href="https://www.navily.com/it/carte" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
+
+                    <div class="preview-card">
+                        <div>
+                            <h3>i-Boating</h3>
+                            <p>Carte nautiche vettoriali HD per pesca e navigazione con batimetria e punti di interesse.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('iboating')">Visualizza</button>
+                            <a href="https://fishing-app.gpsnauticalcharts.com/i-boating-fishing-web-app/fishing-marine-charts-navigation.html#12.5/37.8115/-122.3890" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
+
+                    <div class="preview-card">
+                        <div>
+                            <h3>OpenSea Map</h3>
+                            <p>Progetto open-source per mappe nautiche libere con fari, boe e informazioni di navigazione.</p>
+                        </div>
+                        <div class="card-actions">
+                            <button class="card-btn btn-view" onclick="switchTab('opensea-map')">Visualizza</button>
+                            <a href="https://map.openseamap.org/" target="_blank" class="card-btn btn-open">Sito</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <div class="card">
-          <h3>Prodotto B</h3>
-          <p>Breve descrizione del prodotto e dei suoi punti di forza.</p>
-          <span class="price">€ 49,00</span>
+
+        <div id="windy" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>Windy</strong></span>
+                <a href="https://www.windy.com/" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://www.windy.com/"></iframe>
         </div>
-        <div class="card">
-          <h3>Prodotto C</h3>
-          <p>Breve descrizione del prodotto e dei suoi punti di forza.</p>
-          <span class="price">€ 19,00</span>
+
+        <div id="windfinder" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>Windfinder</strong></span>
+                <a href="https://www.windfinder.com/#10/45.9621/13.4514/spot" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://www.windfinder.com/#10/45.9621/13.4514/spot"></iframe>
         </div>
-      </div>
-    </section>
 
-    <section id="about" class="page">
-      <h1>Chi siamo</h1>
-      <p class="intro">Racconta qui la storia della tua attività: quando è nata, cosa la contraddistingue, e i valori su cui si basa il tuo lavoro quotidiano.</p>
-      <p class="intro">Puoi aggiungere una seconda sezione con il team, la missione, o i traguardi raggiunti finora.</p>
-    </section>
+        <div id="earth-nullschool" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>Earth Nullschool</strong></span>
+                <a href="https://earth.nullschool.net" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://earth.nullschool.net"></iframe>
+        </div>
 
-    <section id="blog" class="page">
-      <h1>Blog</h1>
-      <p class="intro">Gli ultimi articoli pubblicati.</p>
-      <div class="post">
-        <h3>Titolo del primo articolo</h3>
-        <div class="date">12 agosto 2026</div>
-        <p>Breve estratto dell'articolo che invita il lettore a continuare la lettura.</p>
-      </div>
-      <div class="post">
-        <h3>Titolo del secondo articolo</h3>
-        <div class="date">3 luglio 2026</div>
-        <p>Breve estratto dell'articolo che invita il lettore a continuare la lettura.</p>
-      </div>
-      <div class="post">
-        <h3>Titolo del terzo articolo</h3>
-        <div class="date">21 giugno 2026</div>
-        <p>Breve estratto dell'articolo che invita il lettore a continuare la lettura.</p>
-      </div>
-    </section>
+        <div id="radar-meteo" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>Radar Meteo & Precipitazioni</strong></span>
+                <a href="https://www.meteoeradar.it/radar-meteo" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://www.meteoeradar.it/radar-meteo"></iframe>
+        </div>
 
-    <section id="contact" class="page">
-      <h1>Contatti</h1>
-      <p class="intro">Per qualsiasi informazione, puoi raggiungerci ai recapiti indicati di seguito.</p>
-      <div class="contact-info">
-        <span><strong>Email</strong>info@tuosito.it</span>
-        <span><strong>Telefono</strong>+39 000 000 0000</span>
-        <span><strong>Indirizzo</strong>Via Esempio 1, Mestre (VE)</span>
-      </div>
-    </section>
+        <div id="marine-traffic" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>Marine Traffic</strong></span>
+                <a href="https://www.marinetraffic.com/en" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://www.marinetraffic.com/en"></iframe>
+        </div>
 
-  </main>
+        <div id="navily" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>Navily Carte</strong></span>
+                <a href="https://www.navily.com/it/carte" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://www.navily.com/it/carte"></iframe>
+        </div>
 
-  <script>
-    const buttons = document.querySelectorAll('.menu button');
-    const pages = document.querySelectorAll('.page');
+        <div id="iboating" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>i-Boating GPS Charts</strong></span>
+                <a href="https://fishing-app.gpsnauticalcharts.com/i-boating-fishing-web-app/fishing-marine-charts-navigation.html#12.5/37.8115/-122.3890" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://fishing-app.gpsnauticalcharts.com/i-boating-fishing-web-app/fishing-marine-charts-navigation.html#12.5/37.8115/-122.3890"></iframe>
+        </div>
 
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        buttons.forEach(b => b.classList.remove('active'));
-        pages.forEach(p => p.classList.remove('active'));
+        <div id="opensea-map" class="page">
+            <div class="external-bar">
+                <span>Stai visualizzando: <strong>OpenSea Map</strong></span>
+                <a href="https://map.openseamap.org/" target="_blank" class="external-btn">Apri in una nuova scheda ↗</a>
+            </div>
+            <iframe src="https://map.openseamap.org/"></iframe>
+        </div>
 
-        btn.classList.add('active');
-        document.getElementById(btn.dataset.page).classList.add('active');
-      });
-    });
-  </script>
+    </div>
 
+    <script>
+        function showPage(pageId, element) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(pageId).classList.add('active');
+            if (element) {
+                element.classList.add('active');
+            }
+        }
+
+        function switchTab(pageId) {
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(pageId)) {
+                    showPage(pageId, btn);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
-
